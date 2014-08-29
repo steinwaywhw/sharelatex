@@ -1,0 +1,3 @@
+#!/bin/sh
+USER=sharelatex
+exec setuser $USER /var/www/sharelatex/__SERVICE__/app.js

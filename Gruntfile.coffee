@@ -142,6 +142,9 @@ module.exports = (grunt) ->
 		Helpers.buildDeb @async()
 	grunt.registerTask "build:upstart_scripts", "Create upstart scripts for each service", () ->
 		Helpers.buildUpstartScripts()
+	grunt.registerTask "deploy:files", "Deploy files in default location: /etc/sharelatex/, /var/lib/sharelatex, /var/log/sharelatex, /etc/sv/sharelatex-*", () ->
+		Helpers.deployFiles()
+	grunt.registerTask "deploy", "Deploy files", ["install", "deploy:files"]
 
 	Helpers =
 		installService: (service, callback = (error) ->) ->
@@ -421,7 +424,25 @@ module.exports = (grunt) ->
 			template = fs.readFileSync("package/upstart/sharelatex-template").toString()
 			for service in SERVICES
 				fs.writeFileSync "package/upstart/sharelatex-#{service.name}", template.replace(/__SERVICE__/g, service.name)
-
+				
+		buildRunitScripts: () ->
+			template = fs.readFileSync("package/runit/runapp").toString()
+			templateLog = fs.readFileSync("package/runit/runlog").toString()
+			for service in SERVICES
+				fs.writeFileSync "package/runit/sharelatex-#{service.name}/run", template.replace(/__SERVICE__/g, service.name)
+				fs.writeFileSync "package/runit/sharelatex-#{service.name}/log/run", templateLog.replace(/__SERVICE__/g, service.name)
+				
+		deployFiles: () ->
+			@buildPackageSettingsFile()
+			exec "rm /etc/sharelatex/*"
+			exec "cp package/config/settings.coffee /etc/sharelatex/settings.coffee"
+			
+			@buildRunitScripts()
+			exec "rm -r /etc/sv/sharelatex-*"
+			exec "cp -r package/runit/sharelatex-* /etc/sv/"
+			
+			exec "sh package/scripts/depoly.sh"
+			
 		buildPackageSettingsFile: () ->
 			config = fs.readFileSync("config/settings.development.coffee.example").toString()
 			config = config.replace /DATA_DIR.*/, "DATA_DIR = '/var/lib/sharelatex/data'"
