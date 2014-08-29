@@ -19,3 +19,4 @@ db.sqlite
 
 .DS_Store
 .vagrant
+.c9/
