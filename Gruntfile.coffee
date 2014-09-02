@@ -434,15 +434,25 @@ module.exports = (grunt) ->
 				
 		deployFiles: () ->
 			@buildPackageSettingsFile()
-			exec "rm /etc/sharelatex/*"
-			exec "cp package/config/settings.coffee /etc/sharelatex/settings.coffee"
+			fs.mkdirSync "/etc/sharelatex"
+			fs.writeFileSync "/etc/sharelatex/settings.coffee", fs.readFileSync("package/config/settings.coffee").toString()
 			
 			@buildRunitScripts()
-			exec "rm -r /etc/sv/sharelatex-*"
-			exec "cp -r package/runit/sharelatex-* /etc/sv/"
+			for service in SERVICES
+				fs.mkdirSync "/etc/sv/sharelatex-#{service.name}/log"
+				fs.writeFileSync "/etc/sv/sharelatex-#{service.name}/run", fs.readFileSync("package/runit/sharelatex-#{service.name}/run").toString()
+				fs.writeFileSync "/etc/sv/sharelatex-#{service.name}/log/run", fs.readFileSync("package/runit/sharelatex-#{service.name}/log/run").toString()
 			
 			exec "sh package/scripts/depoly.sh"
 			
+		undeployFiles: () ->
+			fs.rmdirSync "/etc/sharelatex"
+			for service in SERVICES
+				fs.rmdirSync "/etc/sv/sharelatex-#{service.name}"
+
+		afterDeploy: () ->
+			exec "sh -c package/scripts/deploy.sh"
+
 		buildPackageSettingsFile: () ->
 			config = fs.readFileSync("config/settings.development.coffee.example").toString()
 			config = config.replace /DATA_DIR.*/, "DATA_DIR = '/var/lib/sharelatex/data'"
