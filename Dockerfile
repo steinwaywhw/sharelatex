@@ -1,4 +1,4 @@
-FROM steinwaywhw/docker-texlive:latest
+FROM steinwaywhw/docker-texlive:baseimage
 MAINTAINER Steinway Wu "http://steinwaywu.com/"
 
 RUN apt-get update
