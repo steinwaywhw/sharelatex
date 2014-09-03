@@ -443,9 +443,10 @@ module.exports = (grunt) ->
 
 			grunt.log.writeln "Executing package/scripts/deploy.sh ..."
 			exec "sh -c package/scripts/depoly.sh", (error, stdout, stderr) ->
-				if error 
-				then grunt.log.writeln stderr 
-				else grunt.log.writeln stdout
+				if error? 
+					grunt.log.writeln stderr 
+				else 
+					grunt.log.writeln stdout
 
 		buildPackageSettingsFile: () ->
 			grunt.log.writeln "Building config files into config/settings.coffee ..."
