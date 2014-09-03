@@ -430,6 +430,7 @@ module.exports = (grunt) ->
 			template = fs.readFileSync("package/runit/runapp").toString()
 			templateLog = fs.readFileSync("package/runit/runlog").toString()
 			for service in SERVICES
+				grunt.log.writeln "Building run and log/run scripts at package/runit/sharelatex-#{service.name} ..."
 				try fs.mkdirSync "package/runit/sharelatex-#{service.name}" catch e then {}
 				try fs.mkdirSync "package/runit/sharelatex-#{service.name}/log" catch e then {}
 				fs.writeFileSync "package/runit/sharelatex-#{service.name}/run", template.replace(/__SERVICE__/g, service.name)
@@ -440,10 +441,14 @@ module.exports = (grunt) ->
 			@buildPackageSettingsFile()
 			@buildRunitScripts()
 
+			grunt.log.writeln "Executing package/scripts/deploy.sh ..."
 			exec "sh -c package/scripts/depoly.sh", (error) ->
-				if error then grunt.log.writeln error 
+				if error 
+				then grunt.log.writeln error 
+				else grunt.log.writeln "OK"
 
 		buildPackageSettingsFile: () ->
+			grunt.log.writeln "Building config files into config/settings.coffee ..."
 			config = fs.readFileSync("config/settings.development.coffee.example").toString()
 			config = config.replace /DATA_DIR.*/, "DATA_DIR = '/var/lib/sharelatex/data'"
 			config = config.replace /TMP_DIR.*/, "TMP_DIR = '/var/lib/sharelatex/tmp'"

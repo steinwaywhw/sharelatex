@@ -3,7 +3,15 @@ sudo adduser --system --group --home /var/www/sharelatex --no-create-home sharel
 
 mkdir -p /etc/sharelatex
 
-mkdir -p /var/log/sharelatex
+mkdir -p /var/log/sharelatex/web
+mkdir -p /var/log/sharelatex/document-updater
+mkdir -p /var/log/sharelatex/clsi
+mkdir -p /var/log/sharelatex/filestore
+mkdir -p /var/log/sharelatex/track-changes
+mkdir -p /var/log/sharelatex/docstore
+mkdir -p /var/log/sharelatex/chat
+mkdir -p /var/log/sharelatex/tags
+mkdir -p /var/log/sharelatex/spelling
 chown -R sharelatex:sharelatex /var/log/sharelatex
 
 mkdir -p /var/lib/sharelatex/data/user_files

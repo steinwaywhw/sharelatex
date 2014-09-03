@@ -1,2 +1,2 @@
 #!/bin/sh
-exec svlogd -t /var/log/sharelatex/__SERVICE__.log
+exec svlogd -t /var/log/sharelatex/__SERVICE__
