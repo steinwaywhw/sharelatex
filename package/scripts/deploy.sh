@@ -14,6 +14,8 @@ mkdir -p /etc/sharelatex
 
 # for mongodb
 mkdir -p /data/db
+chown -R mongodb:mongodb /data
+
 mkdir -p /etc/sv/mongodb
 mkdir -p /var/log/mongodb
 cp -r /var/www/sharelatex/package/mongodb/* /etc/sv/mongodb
@@ -64,3 +66,7 @@ cp /var/www/sharelatex/package/config/settings.coffee /etc/sharelatex/settings.c
 sed -i "0,/CRYPTO_RANDOM/s/CRYPTO_RANDOM/$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 64 | head -n 1)/" /etc/sharelatex/settings.coffee
 sed -i "0,/CRYPTO_RANDOM/s/CRYPTO_RANDOM/$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 64 | head -n 1)/" /etc/sharelatex/settings.coffee
 
+# for a bug
+cd /var/www/sharelatex/web
+rm -r node_modules/bcrypt
+npm install bcrypt

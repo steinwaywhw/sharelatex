@@ -41,4 +41,5 @@ WORKDIR /var/www/sharelatex
 
 RUN npm install
 RUN grunt install 
-#RUN grunt deploy
+RUN grunt deploy
+RUN /var/www/sharelatex/package/script/deploy.sh 

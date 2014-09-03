@@ -144,7 +144,7 @@ module.exports = (grunt) ->
 		Helpers.buildUpstartScripts()
 	grunt.registerTask "deploy:files", "Deploy files in default location: /etc/sharelatex/, /var/lib/sharelatex, /var/log/sharelatex, /etc/sv/sharelatex-*", () ->
 		Helpers.deployFiles()
-	grunt.registerTask "deploy", "Deploy files", ["install", "deploy:files"]
+	grunt.registerTask "deploy", "Deploy files", ["deploy:files"]
 
 	Helpers =
 		installService: (service, callback = (error) ->) ->
