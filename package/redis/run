@@ -1,2 +1,2 @@
 #!/bin/sh
-exec redis-server
+exec setuser redis redis-server
