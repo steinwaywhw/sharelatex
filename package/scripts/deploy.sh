@@ -33,7 +33,7 @@ mkdir -p /etc/sv/sharelatex-spelling
 
 cp -r /var/www/sharelatex/package/runit/sharelatex* /etc/sv/
 chmod -R +x /etc/sv/sharelatex-*
-ln -s /etc/sv/sharelatex-* /etc/service/
+ln -fs /etc/sv/sharelatex-* /etc/service/
 
 cp /var/www/sharelatex/package/config/settings.coffee /etc/sharelatex/settings.coffee
 sed -i "0,/CRYPTO_RANDOM/s/CRYPTO_RANDOM/$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 64 | head -n 1)/" /etc/sharelatex/settings.coffee

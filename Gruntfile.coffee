@@ -442,10 +442,10 @@ module.exports = (grunt) ->
 			@buildRunitScripts()
 
 			grunt.log.writeln "Executing package/scripts/deploy.sh ..."
-			exec "sh -c package/scripts/depoly.sh", (error) ->
+			exec "sh -c package/scripts/depoly.sh", (error, stdout, stderr) ->
 				if error 
-				then grunt.log.writeln error 
-				else grunt.log.writeln "OK"
+				then grunt.log.writeln stderr 
+				else grunt.log.writeln stdout
 
 		buildPackageSettingsFile: () ->
 			grunt.log.writeln "Building config files into config/settings.coffee ..."
