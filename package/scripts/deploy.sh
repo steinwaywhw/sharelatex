@@ -1,4 +1,13 @@
 #!/bin/sh
+rm -rf /etc/sharelatex
+rm -rf /var/log/sharelatex 
+rm -rf /var/log/mongodb
+rm -rf /var/log/redis 
+rm -rf /etc/sv/sharelatex-*
+rm -rf /etc/sv/mongodb
+rm -rf /etc/sv/redis 
+rm -rf /data/db 
+
 sudo adduser --system --group --home /var/www/sharelatex --no-create-home sharelatex
 
 mkdir -p /etc/sharelatex
