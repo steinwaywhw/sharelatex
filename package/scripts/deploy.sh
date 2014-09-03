@@ -3,6 +3,20 @@ sudo adduser --system --group --home /var/www/sharelatex --no-create-home sharel
 
 mkdir -p /etc/sharelatex
 
+# for mongodb
+mkdir -p /data/db
+mkdir -p /etc/sv/mongodb
+cp -r /var/www/sharelatex/package/mongodb/* /etc/sv/mongodb
+chmod -R +x /etc/sv/mongodb
+ln -fs /etc/sv/mongodb /etc/service/
+
+# for redis
+mkdir -p /etc/sv/redis 
+cp -r /var/www/sharelatex/package/redis/* /etc/sv/redis 
+chmod -R +x /etc/sv/redis
+ln -fs /etc/sv/redis /etc/service/
+
+# for sharelatex
 mkdir -p /var/log/sharelatex/web
 mkdir -p /var/log/sharelatex/document-updater
 mkdir -p /var/log/sharelatex/clsi
