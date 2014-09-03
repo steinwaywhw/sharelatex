@@ -426,32 +426,22 @@ module.exports = (grunt) ->
 				fs.writeFileSync "package/upstart/sharelatex-#{service.name}", template.replace(/__SERVICE__/g, service.name)
 				
 		buildRunitScripts: () ->
+			grunt.log.writeln "Building runit scripts ..."
 			template = fs.readFileSync("package/runit/runapp").toString()
 			templateLog = fs.readFileSync("package/runit/runlog").toString()
 			for service in SERVICES
+				try fs.mkdirSync "package/runit/sharelatex-#{service.name}" catch e then {}
+				try fs.mkdirSync "package/runit/sharelatex-#{service.name}/log" catch e then {}
 				fs.writeFileSync "package/runit/sharelatex-#{service.name}/run", template.replace(/__SERVICE__/g, service.name)
 				fs.writeFileSync "package/runit/sharelatex-#{service.name}/log/run", templateLog.replace(/__SERVICE__/g, service.name)
-				
+			
 		deployFiles: () ->
+			grunt.log.writeln "Deploying files ..."
 			@buildPackageSettingsFile()
-			fs.mkdirSync "/etc/sharelatex"
-			fs.writeFileSync "/etc/sharelatex/settings.coffee", fs.readFileSync("package/config/settings.coffee").toString()
-			
 			@buildRunitScripts()
-			for service in SERVICES
-				fs.mkdirSync "/etc/sv/sharelatex-#{service.name}/log"
-				fs.writeFileSync "/etc/sv/sharelatex-#{service.name}/run", fs.readFileSync("package/runit/sharelatex-#{service.name}/run").toString()
-				fs.writeFileSync "/etc/sv/sharelatex-#{service.name}/log/run", fs.readFileSync("package/runit/sharelatex-#{service.name}/log/run").toString()
-			
-			exec "sh package/scripts/depoly.sh"
-			
-		undeployFiles: () ->
-			fs.rmdirSync "/etc/sharelatex"
-			for service in SERVICES
-				fs.rmdirSync "/etc/sv/sharelatex-#{service.name}"
 
-		afterDeploy: () ->
-			exec "sh -c package/scripts/deploy.sh"
+			exec "sh -c package/scripts/depoly.sh", (error) ->
+				if error then grunt.log.writeln error 
 
 		buildPackageSettingsFile: () ->
 			config = fs.readFileSync("config/settings.development.coffee.example").toString()
